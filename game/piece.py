@@ -1,5 +1,6 @@
-class piece:
+class Piece:
     def __init__(self):
+        self.id = None
         self.kind = None
         self.color = None
         self.posx = None
@@ -11,20 +12,26 @@ class piece:
     def attack(self, piece):
         pass
 
-class pawn(piece):
-    pass
+class Pawn(Piece):
+    def __init__(self):
+        self.id = 1
 
-class tower(piece):
-    pass
+class Tower(Piece):
+    def __init__(self):
+        self.id = 2
 
-class horse(piece):
-    pass
+class Horse(Piece):
+    def __init__(self):
+        self.id = 3
 
-class bishop(piece):
-    pass
+class Bishop(Piece):
+    def __init__(self):
+        self.id = 4
 
-class king(piece):
-    pass
+class King(Piece):
+    def __init__(self):
+        self.id = 5
 
-class queen(piece):
-    pass
+class Queen(Piece):
+    def __init__(self):
+        self.id = 6
