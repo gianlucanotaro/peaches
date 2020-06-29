@@ -1,2 +1,0 @@
-class pawn(pieces):
-    
