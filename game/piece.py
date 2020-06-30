@@ -1,6 +1,15 @@
 from enum import Enum
 
 
+def cleanList(list: list) -> list:
+    r = range(0, 8)
+    for i in list:
+        if i[0] not in r or i[1] not in r:
+            list.remove(i)
+            print(i)
+    return list
+
+
 class Color(Enum):
     BLACK = 1
     WHITE = 2
@@ -13,8 +22,18 @@ class Pawn:
         self.posY = y
         self.color = c
 
-    def move(self, x, y):
-        pass
+    def move(self):
+
+        if self.color == Color.BLACK:
+            return cleanList([[self.posX, self.posY + 1],
+                              [self.posX, self.posY + 2],
+                              [self.posX + 1, self.posY + 1],
+                              [self.posX - 1, self.posY + 1]])
+        if self.color == Color.WHITE:
+            return cleanList([[self.posX, self.posY - 1],
+                              [self.posX, self.posY - 2],
+                              [self.posX + 1, self.posY - 1],
+                              [self.posX - 1, self.posY - 1]])
 
 
 class Rook:
@@ -30,7 +49,7 @@ class Rook:
             moves.append([i, self.posY])
             moves.append([self.posX, i])
         moves.remove([self.posX, self.posY])
-        return moves
+        return cleanList(moves)
 
 
 class Knight:
@@ -44,7 +63,7 @@ class Knight:
         moves = [[self.posX - 2, self.posY - 1], [self.posX - 2, self.posY + 1], [self.posX - 1, self.posY - 2],
                  [self.posX - 1, self.posY + 2], [self.posX + 1, self.posY - 2], [self.posX + 1, self.posY + 2],
                  [self.posX + 2, self.posY - 1], [self.posX + 2, self.posY + 1]]
-        return moves
+        return cleanList(moves)
 
 
 class Bishop:
@@ -66,7 +85,8 @@ class Bishop:
                 moves.append([self.posX - i, self.posY - i])
             if self.posX - i in r and self.posY + i in r:
                 moves.append([self.posX - i, self.posY + i])
-        return moves
+        moves.remove([self.posX, self.posY])
+        return cleanList(moves)
 
 
 class King:
@@ -92,7 +112,7 @@ class King:
             moves.append([i, self.posY])
             moves.append([self.posX, i])
         moves.remove([self.posX, self.posY])
-        return moves
+        return cleanList(moves)
 
 
 class Queen:
@@ -111,7 +131,7 @@ class Queen:
                  [self.posX - 1, self.posY - 1],
                  [self.posX, self.posY + 1],
                  [self.posX, self.posY - 1]]
-        return moves
+        return cleanList(moves)
 
 
 class Empty:
