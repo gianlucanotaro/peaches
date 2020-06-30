@@ -2,14 +2,14 @@ from game.Piece import *
 
 
 class Board:
-    grid = [[Tower, Horse, Bishop, King, Queen, Bishop, Horse, Tower],
+    grid = [[Rook, Knight, Bishop, King, Queen, Bishop, Knight, Rook],
             [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn],
             [None, None, None, None, None, None, None, None],
             [None, None, None, None, None, None, None, None],
             [None, None, None, None, None, None, None, None],
             [None, None, None, None, None, None, None, None],
             [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn],
-            [Tower, Horse, Bishop, King, Queen, Bishop, Horse, Tower]]
+            [Rook, Knight, Bishop, King, Queen, Bishop, Knight, Rook]]
 
     def draw(self):
         pass
