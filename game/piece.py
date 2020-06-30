@@ -94,7 +94,7 @@ class King:
         self.posX = x
         self.posY = y
         self.color = c
-        self.points = 10000000
+        self.points = 'K'
 
     def move(self):
         moves = []
@@ -132,14 +132,3 @@ class Queen:
                  [self.posX, self.posY + 1],
                  [self.posX, self.posY - 1]]
         return cleanList(moves)
-
-
-class Empty:
-    def __init__(self, x: int, y: int, c: Color):
-        self.posX = x
-        self.posY = y
-        self.color = c
-        self.points = 0
-
-    def move(self, x, y):
-        pass

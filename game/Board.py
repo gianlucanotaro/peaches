@@ -7,7 +7,7 @@ class Board:
             [Pawn(1, 0, Color.BLACK), Pawn(1, 1, Color.BLACK), Pawn(1, 2, Color.BLACK), Pawn(1, 3, Color.BLACK),
              Pawn(1, 4, Color.BLACK), Pawn(1, 5, Color.BLACK), Pawn(1, 6, Color.BLACK), Pawn(1, 7, Color.BLACK)],
             [None, None, None, None, None, None, None, None],
-            [None, None, Queen(0, 0, Color.BLACK), None, None, None, None, None],
+            [None, None, None, None, None, None, None, None],
             [None, None, None, None, None, None, None, None],
             [None, None, None, None, None, None, None, None],
             [Pawn(6, 0, Color.WHITE), Pawn(6, 1, Color.WHITE), Pawn(6, 2, Color.WHITE), Pawn(6, 3, Color.WHITE),
@@ -30,5 +30,10 @@ class Board:
 
 if __name__ == '__main__':
     board = Board()
-    a = board.grid[3][2].move()
-    print(a)
+    for sub in board.grid:
+        print("")
+        for i in sub:
+            if i != None:
+                print(i.points, end=' ')
+            else:
+                print("0", end=' ')
