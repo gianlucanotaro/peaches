@@ -1,55 +1,125 @@
-class Piece:
-    def __init__(self):
-        self.points = None
-        self.kind = None
-        self.color = None
-        self.posx = None
-        self.posy = None
+from enum import Enum
+
+
+class Color(Enum):
+    BLACK = 1
+    WHITE = 2
+
+
+class Pawn:
+    def __init__(self, x: int, y: int, c: Color):
+        self.points = 1
+        self.posX = x
+        self.posY = y
+        self.color = c
 
     def move(self, x, y):
         pass
 
-    def attack(self, piece):
-        pass
-    
 
-class Pawn(Piece):
-    def __init__(self):
-        Piece.__init__(self)
-        self.points = 1
+class Rook:
+    def __init__(self, x: int, y: int, c: Color):
+        self.points = 5
+        self.posX = x
+        self.posY = y
+        self.color = c
+
+    def move(self):
+        moves = []
+        for i in range(7):
+            moves.append([i, self.posY])
+            moves.append([self.posX, i])
+        moves.remove([self.posX, self.posY])
+        return moves
 
 
-class Rook(Piece):
-    def __init__(self):
-        Piece.__init__(self)
-        self.points = 2
-
-
-class Knight(Piece):
-    def __init__(self):
-        Piece.__init__(self)
+class Knight:
+    def __init__(self, x: int, y: int, c: Color):
+        self.posX = x
+        self.posY = y
+        self.color = c
         self.points = 3
 
-
-class Bishop(Piece):
-    def __init__(self):
-        Piece.__init__(self)
-        self.points = 4
-
-
-class King(Piece):
-    def __init__(self):
-        Piece.__init__(self)
-        self.points = 5
+    def move(self):
+        moves = [[self.posX - 2, self.posY - 1], [self.posX - 2, self.posY + 1], [self.posX - 1, self.posY - 2],
+                 [self.posX - 1, self.posY + 2], [self.posX + 1, self.posY - 2], [self.posX + 1, self.posY + 2],
+                 [self.posX + 2, self.posY - 1], [self.posX + 2, self.posY + 1]]
+        return moves
 
 
-class Queen(Piece):
-    def __init__(self):
-        Piece.__init__(self)
-        self.points = 6
+class Bishop:
+    def __init__(self, x: int, y: int, c: Color):
+        self.posX = x
+        self.posY = y
+        self.color = c
+        self.points = 3
+
+    def move(self):
+        moves = []
+        r = range(0, 8)
+        for i in range(0, 8):
+            if self.posX + i in r and self.posY + i in r:
+                moves.append([self.posX + i, self.posY + i])
+            if self.posX + i in r and self.posY - i in r:
+                moves.append([self.posX + i, self.posY - i])
+            if self.posX - i in r and self.posY - i in r:
+                moves.append([self.posX - i, self.posY - i])
+            if self.posX - i in r and self.posY + i in r:
+                moves.append([self.posX - i, self.posY + i])
+        return moves
 
 
-class Empty(Piece):
-    def __init__(self):
-        Piece.__init__(self)
+class King:
+    def __init__(self, x: int, y: int, c: Color):
+        self.posX = x
+        self.posY = y
+        self.color = c
+        self.points = 10000000
+
+    def move(self):
+        moves = []
+        r = range(0, 8)
+        for i in range(0, 8):
+            if self.posX + i in r and self.posY + i in r:
+                moves.append([self.posX + i, self.posY + i])
+            if self.posX + i in r and self.posY - i in r:
+                moves.append([self.posX + i, self.posY - i])
+            if self.posX - i in r and self.posY - i in r:
+                moves.append([self.posX - i, self.posY - i])
+            if self.posX - i in r and self.posY + i in r:
+                moves.append([self.posX - i, self.posY + i])
+        for i in range(7):
+            moves.append([i, self.posY])
+            moves.append([self.posX, i])
+        moves.remove([self.posX, self.posY])
+        return moves
+
+
+class Queen:
+    def __init__(self, x: int, y: int, c: Color):
+        self.posX = x
+        self.posY = y
+        self.color = c
+        self.points = 9
+
+    def move(self):
+        moves = [[self.posX + 1, self.posY],
+                 [self.posX + 1, self.posY + 1],
+                 [self.posX + 1, self.posY - 1],
+                 [self.posX - 1, self.posY],
+                 [self.posX - 1, self.posY + 1],
+                 [self.posX - 1, self.posY - 1],
+                 [self.posX, self.posY + 1],
+                 [self.posX, self.posY - 1]]
+        return moves
+
+
+class Empty:
+    def __init__(self, x: int, y: int, c: Color):
+        self.posX = x
+        self.posY = y
+        self.color = c
         self.points = 0
+
+    def move(self, x, y):
+        pass
