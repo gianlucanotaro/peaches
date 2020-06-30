@@ -1,13 +1,15 @@
+from game.Piece import *
+
+
 class Board:
-    def __init__(self, pieces):
-        grid = [[2, 3, 4, 5, 6, 4, 3, 2],
-                [1, 1, 1, 1, 1, 1, 1, 1],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [1, 1, 1, 1, 1, 1, 1, 1],
-                [2, 3, 4, 5, 6, 4, 3, 2]]
+    grid = [[Tower, Horse, Bishop, King, Queen, Bishop, Horse, Tower],
+            [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn],
+            [None, None, None, None, None, None, None, None],
+            [None, None, None, None, None, None, None, None],
+            [None, None, None, None, None, None, None, None],
+            [None, None, None, None, None, None, None, None],
+            [Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn, Pawn],
+            [Tower, Horse, Bishop, King, Queen, Bishop, Horse, Tower]]
 
     def draw(self):
         pass
@@ -20,3 +22,7 @@ class Board:
 
     def minimax(self):
         pass
+
+
+if __name__ == '__main__':
+    board = Board()
