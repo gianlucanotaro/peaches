@@ -21,19 +21,25 @@ class Board:
     def refresh(self):
         pass
 
-    def check_moves(self, pos_x: int, pos_y: int):
+    def check_moves(self, x,y):
+        possible_moves = self.grid[x][y].move()
+        print(possible_moves)
         pass
 
     def minimax(self):
         pass
 
+    def printBoard(self):
+        for sub in board.grid:
+            print("")
+            for i in sub:
+                if i is not None:
+                    print(i.points, end=' ')
+                else:
+                    print("0", end=' ')
+
 
 if __name__ == '__main__':
     board = Board()
-    for sub in board.grid:
-        print("")
-        for i in sub:
-            if i != None:
-                print(i.points, end=' ')
-            else:
-                print("0", end=' ')
+    print(type(board.grid[1][1]))
+    board.check_moves(1,1)
