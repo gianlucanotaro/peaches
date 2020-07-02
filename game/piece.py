@@ -18,7 +18,14 @@ class Color(Enum):
 
 
 class Piece:
-    pass
+    def __init__(self, x: int, y: int):
+        self.points = 1
+        self.posX = x
+        self.posY = y
+        self.color = Color.NONE
+
+    def move(self):
+        pass
 
 
 class Pawn(Piece):
@@ -145,3 +152,4 @@ class Empty(Piece):
         self.posX = 0
         self.posY = 0
         self.color = Color.NONE
+        self.points = 0

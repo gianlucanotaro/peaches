@@ -1,3 +1,5 @@
+import random
+
 from game.piece import *
 
 
@@ -36,12 +38,23 @@ class Board:
         for sub in board.grid:
             print("")
             for i in sub:
-                if i is not Empty:
-                    print(i.points, end=' ')
-                else:
-                    print("0", end=' ')
+                print(i.points, end=' ')
+
+    def move_piece(self, piece:Piece):
+        x = piece.posX
+        y = piece.posY
+        a = self.check_moves(x,y)
+        selection = random.choice(a)
+        print(selection)
+        piece.posX, piece.posY = selection
+        board.grid[piece.posX][piece.posY] =  piece
+        board.grid[x][y] = Empty()
+
 
 
 if __name__ == '__main__':
     board = Board()
-    print(board.check_moves(0, 1))
+    print(board.check_moves(0, 3))
+    board.printBoard()
+    board.move_piece(board.grid[0][3])
+    board.printBoard()
