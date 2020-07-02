@@ -3,16 +3,18 @@ from enum import Enum
 
 def clean_list(list: list) -> list:
     r = range(0, 8)
+    dellist = []
     for i in list:
         if i[0] not in r or i[1] not in r:
-            list.remove(i)
+            dellist.append(i)
             print(i)
-    return list
+    return [move for move in list if move not in dellist]
 
 
 class Color(Enum):
     BLACK = 1
     WHITE = 2
+    NONE = 3
 
 
 class Piece:
@@ -136,3 +138,10 @@ class Queen(Piece):
                  [self.posX, self.posY + 1],
                  [self.posX, self.posY - 1]]
         return clean_list(moves)
+
+
+class Empty(Piece):
+    def __init__(self):
+        self.posX = 0
+        self.posY = 0
+        self.color = Color.NONE
