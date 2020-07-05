@@ -8,6 +8,7 @@ def clean_list(list: list) -> list:
         if i[0] not in r or i[1] not in r:
             dellist.append(i)
             print(i)
+    print("Following will be removed: ",[move for move in list if move not in dellist])
     return [move for move in list if move not in dellist]
 
 
@@ -24,7 +25,7 @@ class Piece:
         self.posY = y
         self.color = Color.NONE
 
-    def move(self):
+    def possible_move(self):
         pass
 
 
@@ -35,18 +36,18 @@ class Pawn(Piece):
         self.posY = y
         self.color = c
 
-    def move(self):
+    def possible_move(self):
 
         if self.color == Color.BLACK:
-            return clean_list([[self.posX, self.posY + 1],
-                               [self.posX, self.posY + 2],
+            return clean_list([[self.posX+1, self.posY],
+                               [self.posX+2, self.posY],
                                [self.posX + 1, self.posY + 1],
-                               [self.posX - 1, self.posY + 1]])
+                               [self.posX + 1, self.posY - 1]])
         if self.color == Color.WHITE:
-            return clean_list([[self.posX, self.posY - 1],
-                               [self.posX, self.posY - 2],
-                               [self.posX + 1, self.posY - 1],
-                               [self.posX - 1, self.posY - 1]])
+            return clean_list([[self.posX-1, self.posY],
+                               [self.posX-2, self.posY],
+                               [self.posX - 1, self.posY - 1],
+                               [self.posX - 1, self.posY + 1]])
 
 
 class Rook(Piece):
@@ -56,7 +57,7 @@ class Rook(Piece):
         self.posY = y
         self.color = c
 
-    def move(self):
+    def possible_move(self):
         moves = []
         for i in range(7):
             moves.append([i, self.posY])
@@ -72,7 +73,7 @@ class Knight(Piece):
         self.color = c
         self.points = 3
 
-    def move(self):
+    def possible_move(self):
         moves = [[self.posX - 2, self.posY - 1], [self.posX - 2, self.posY + 1], [self.posX - 1, self.posY - 2],
                  [self.posX - 1, self.posY + 2], [self.posX + 1, self.posY - 2], [self.posX + 1, self.posY + 2],
                  [self.posX + 2, self.posY - 1], [self.posX + 2, self.posY + 1]]
@@ -86,7 +87,7 @@ class Bishop(Piece):
         self.color = c
         self.points = 3
 
-    def move(self):
+    def possible_move(self):
         moves = []
         r = range(0, 8)
         for i in range(0, 8):
@@ -109,7 +110,7 @@ class King(Piece):
         self.color = c
         self.points = 'K'
 
-    def move(self):
+    def possible_move(self):
         moves = []
         r = range(0, 8)
         for i in range(0, 8):
@@ -135,7 +136,7 @@ class Queen(Piece):
         self.color = c
         self.points = 9
 
-    def move(self):
+    def possible_move(self):
         moves = [[self.posX + 1, self.posY],
                  [self.posX + 1, self.posY + 1],
                  [self.posX + 1, self.posY - 1],

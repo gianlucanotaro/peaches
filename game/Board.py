@@ -24,7 +24,7 @@ class Board:
         pass
 
     def check_moves(self, x, y):
-        possible_moves = self.grid[x][y].move()
+        possible_moves = self.grid[x][y].possible_move()
         dellist = []
         for i in possible_moves:
             if self.grid[i[0]][i[1]].color == self.grid[x][y].color:
@@ -39,22 +39,21 @@ class Board:
             print("")
             for i in sub:
                 print(i.points, end=' ')
+        print("")
 
-    def move_piece(self, piece:Piece):
+    def move_piece(self, piece: Piece):
         x = piece.posX
         y = piece.posY
-        a = self.check_moves(x,y)
+        a = self.check_moves(x, y)
         selection = random.choice(a)
-        print(selection)
+        print("Piece will move: ", selection)
         piece.posX, piece.posY = selection
-        board.grid[piece.posX][piece.posY] =  piece
+        board.grid[piece.posX][piece.posY] = piece
         board.grid[x][y] = Empty()
-
 
 
 if __name__ == '__main__':
     board = Board()
-    print(board.check_moves(0, 3))
     board.printBoard()
-    board.move_piece(board.grid[0][3])
+    board.move_piece(board.grid[1][7])
     board.printBoard()
