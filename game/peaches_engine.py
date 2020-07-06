@@ -55,7 +55,39 @@ class GameState():
         return self.get_possible_moves()
 
     def get_possible_moves(self):
+        moves = []
+        for r in range(len(self.board)):
+            for c in range(len(self.board[r])):
+                turn = self.board[r][c][0]
+                if (turn == 'w' and self.turnPlayer) and (turn == 'b' and not self.turnPlayer):
+                    piece = self.board[r][c][1]
+                    if piece == 'p':
+                        self.get_pawn_moves(r, c, moves)
+                    if piece == 'R':
+                        self.get_rook_moves(r, c, moves)
+                    if piece == 'N':
+                        self.get_knight_moves(r, c, moves)
+                    if piece == 'B':
+                        self.get_bishop_moves(r, c, moves)
+                    if piece == 'K':
+                        self.get_king_moves(r, c, moves)
+                    if piece == 'Q':
+                        self.get_queen_moves(r, c, moves)
+
+    def get_pawn_moves(self, r: int, c: int, moves: [Move]):
         pass
 
+    def get_rook_moves(self, r: int, c: int, moves: [Move]):
+        pass
 
+    def get_bishop_moves(self, r: int, c: int, moves: [Move]):
+        pass
 
+    def get_knight_moves(self, r: int, c: int, moves: [Move]):
+        pass
+
+    def get_king_moves(self, r: int, c: int, moves: [Move]):
+        pass
+
+    def get_queen_moves(self, r: int, c: int, moves: [Move]):
+        pass
