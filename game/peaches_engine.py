@@ -32,6 +32,9 @@ class GameState():
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
 
+        self.move_functions = {'p': self.get_pawn_moves, 'R': self.get_rook_moves, 'N': self.get_knight_moves,
+                               'B': self.get_bishop_moves, 'K': self.get_king_moves, 'Q': self.get_queen_moves}
+
         # True = White
         # False = Black
         self.turnPlayer = True
@@ -61,33 +64,50 @@ class GameState():
                 turn = self.board[r][c][0]
                 if (turn == 'w' and self.turnPlayer) and (turn == 'b' and not self.turnPlayer):
                     piece = self.board[r][c][1]
-                    if piece == 'p':
-                        self.get_pawn_moves(r, c, moves)
-                    if piece == 'R':
-                        self.get_rook_moves(r, c, moves)
-                    if piece == 'N':
-                        self.get_knight_moves(r, c, moves)
-                    if piece == 'B':
-                        self.get_bishop_moves(r, c, moves)
-                    if piece == 'K':
-                        self.get_king_moves(r, c, moves)
-                    if piece == 'Q':
-                        self.get_queen_moves(r, c, moves)
+                    self.move_functions[piece](r, c, moves)
+        return moves
 
     def get_pawn_moves(self, r: int, c: int, moves: [Move]):
-        pass
+        if self.turnPlayer:  # White player turn
+            if self.board[r - 1][c] == '-':
+                moves.append(Move((r, c), r - 1, c), self.board)
+                if r == 6 and self.board[r - 2][c] == '-':
+                    moves.append(Move((r, c), (r - 1, c - 1), self.board))
+            if c - 1 >= 0:  # Captures to the left
+                if self.board[r - 1][c - 1][0] == 'b':
+                    moves.append(Move((r, c), (r - 1, c - 1), self.board))
+            if c + 1 <= 7:  # Captures to the right
+                if self.board[r - 1][c + 1][0] == 'b':
+                    moves.append(Move((r, c), (r - 1, c + 1), self.board))
+
+        else:  # Black movement
+            if self.board[r + 1][c] == '-':
+                moves.append(Move((r, c), r + 1, c), self.board)
+                if r == 1 and self.board[r + 2][c] == '-':
+                    moves.append(Move((r, c), (r + 1, c + 1), self.board))
+            if c - 1 >= 0:  # Captures to the left
+                if self.board[r + 1][c - 1][0] == 'w':
+                    moves.append(Move((r, c), (r + 1, c - 1), self.board))
+            if c + 1 <= 7:  # Captures to the right
+                if self.board[r - 1][c + 1][0] == 'w':
+                    moves.append(Move((r, c), (r + 1, c + 1), self.board))
 
     def get_rook_moves(self, r: int, c: int, moves: [Move]):
+        directions = ((1, 0), (0, 1), (-1, 0), (0, -1))
         pass
 
     def get_bishop_moves(self, r: int, c: int, moves: [Move]):
+        directions = ((1, 1), (1, -1), (-1, 1), (-1, -1))
         pass
 
     def get_knight_moves(self, r: int, c: int, moves: [Move]):
+        directions = ((2, 1), (2, -1), (1, -2), (-1, -2), (-2, 1), (-2, -1), (1, 2), (-1, 2))
         pass
 
     def get_king_moves(self, r: int, c: int, moves: [Move]):
+        directions = ((1, 1), (1, -1), (-1, 1), (-1, -1), (1, 0), (0, 1), (-1, 0), (0, -1))
         pass
 
     def get_queen_moves(self, r: int, c: int, moves: [Move]):
+        directions = ((1, 1), (-1, 1), (-1, -1), (1, -1), (1, 0), (0, 1), (-1, 0), (0, -1))
         pass
