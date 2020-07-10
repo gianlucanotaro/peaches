@@ -94,7 +94,22 @@ class GameState():
 
     def get_rook_moves(self, r: int, c: int, moves: [Move]):
         directions = ((1, 0), (0, 1), (-1, 0), (0, -1))
-        pass
+        enemyColor = "b" if self.turnPlayer else "w"
+        for d in directions:
+            for i in range(1,8):
+                endRow = r + d(0) * i
+                endCol = c + d(0) * i
+                if 0 <= endRow < 8 and 0 <= endCol < 8:
+                    endPiece = self.board[endRow][endCol]
+                    if endPiece == '-':
+                        moves.append(Move(r,c), (endRow, endCol), self.board)
+                    elif endPiece[0] == enemyColor:
+                        moves.append(Move(r,c)(endRow, endCol), self.board)
+                        break
+                    else:
+                        break
+                else:
+                    break
 
     def get_bishop_moves(self, r: int, c: int, moves: [Move]):
         directions = ((1, 1), (1, -1), (-1, 1), (-1, -1))
@@ -111,3 +126,13 @@ class GameState():
     def get_queen_moves(self, r: int, c: int, moves: [Move]):
         directions = ((1, 1), (-1, 1), (-1, -1), (1, -1), (1, 0), (0, 1), (-1, 0), (0, -1))
         pass
+
+    def print_board(self):
+        for sub in self.board:
+            print(sub)
+
+
+if __name__ == '__main__':
+    game = GameState()
+    game.make_move(Move((1,1), (2,5), game.board))
+    game.print_board()
