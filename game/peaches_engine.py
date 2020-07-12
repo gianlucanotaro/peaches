@@ -182,4 +182,3 @@ class GameState():
     def print_board(self):
         for sub in self.board:
             print(sub)
-
