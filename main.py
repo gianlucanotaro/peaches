@@ -36,17 +36,14 @@ def on_start(event):
 
 
 def on_drop(event):
-    # g.board[event.y // 100][event.x // 100] = g.board[ystart][xstart]
-    # g.board[ystart][xstart] = '--'
-    # g.get_possible_moves()
     moves = g.get_possible_moves()
     move = Move((ystart, xstart), (event.y // 100, event.x // 100), g.board)
     if move in moves:
         g.make_move(move)
         draw_board(g.board)
+        print(g.move_log)
     else:
         print("invalid")
-    # draw_board(g.board)
 
 
 if __name__ == "__main__":
