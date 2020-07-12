@@ -183,8 +183,3 @@ class GameState():
         for sub in self.board:
             print(sub)
 
-
-if __name__ == '__main__':
-    game = GameState()
-    game.make_move(Move((1, 1), (2, 5), game.board))
-    game.print_board()
