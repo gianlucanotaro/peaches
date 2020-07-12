@@ -1,6 +1,7 @@
 from tkinter import *
 
 from game import peaches_engine
+from game.peaches_engine import Move
 
 WIDTH = HEIGHT = 800
 DIMENSION = 8
@@ -27,10 +28,6 @@ def refresh_pieces(board):
             canvas.create_text(x0, y0, text=board[r][c])
 
 
-def get_piece_at_coordinate(x, y):
-    print(g.get_pawn_moves(x // 100, y // 100, g.get_possible_moves()))
-
-
 def on_start(event):
     global xstart
     global ystart
@@ -39,11 +36,18 @@ def on_start(event):
 
 
 def on_drop(event):
-    print(xstart, ystart, event.x // 100, event.y // 100)
-    g.board[event.y // 100][event.x // 100] = g.board[ystart][xstart]
-    g.board[ystart][xstart] = '--'
-    g.print_board()
-    draw_board(g.board)
+    # g.board[event.y // 100][event.x // 100] = g.board[ystart][xstart]
+    # g.board[ystart][xstart] = '--'
+    # g.get_possible_moves()
+    moves = g.get_possible_moves()
+    move = Move((ystart, xstart), (event.y // 100, event.x // 100), g.board)
+    if move in moves:
+        g.make_move(move)
+        draw_board(g.board)
+    else:
+        print("invalid")
+    # draw_board(g.board)
+
 
 if __name__ == "__main__":
     g = peaches_engine.GameState()

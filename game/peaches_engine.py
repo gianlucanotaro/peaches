@@ -11,6 +11,16 @@ class Move:
         self.end_col = endSq[1]
         self.pieceMoved = board[self.startRow][self.startCol]
         self.pieceCaptured = board[self.end_row][self.end_col]
+        self.moveID = self.startRow * 1000 + self.startCol * 100 + self.end_row * 10 + self.end_col
+
+    def __str__(self):
+        return str(self.colsToFiles[self.startCol]) + str(self.rowsToRanks[self.startRow]) + \
+               str(self.colsToFiles[self.end_col]) + str(self.rowsToRanks[self.end_row])
+
+    def __eq__(self, other):
+        if isinstance(other, Move):
+            return self.moveID == other.moveID
+        return False
 
     def get_chess_notation(self):
         return self.get_rank_file(self.startRow, self.startCol) + self.get_rank_file(self.end_row, self.end_col)
@@ -42,7 +52,7 @@ class GameState():
         self.move_log = []
 
     def make_move(self, move: Move):
-        self.board[move.startRow][move.startCol] = "-"
+        self.board[move.startRow][move.startCol] = "--"
         self.board[move.end_row][move.end_col] = move.pieceMoved
         self.move_log.append(move)
         self.turnPlayer = not self.turnPlayer
@@ -62,17 +72,17 @@ class GameState():
         for r in range(len(self.board)):
             for c in range(len(self.board[r])):
                 turn = self.board[r][c][0]
-                if (turn == 'w' and self.turnPlayer) and (turn == 'b' and not self.turnPlayer):
+                if (turn == 'w' and self.turnPlayer) or (turn == 'b' and not self.turnPlayer):
                     piece = self.board[r][c][1]
                     self.move_functions[piece](r, c, moves)
         return moves
 
     def get_pawn_moves(self, r: int, c: int, moves: [Move]):
         if self.turnPlayer:  # White player turn
-            if self.board[r - 1][c] == '-':
-                moves.append(Move((r, c), r - 1, c), self.board)
-                if r == 6 and self.board[r - 2][c] == '-':
-                    moves.append(Move((r, c), (r - 1, c - 1), self.board))
+            if self.board[r - 1][c] == '--':
+                moves.append(Move((r, c), (r - 1, c), self.board))
+                if r == 6 and self.board[r - 2][c] == '--':
+                    moves.append(Move((r, c), (r - 2, c), self.board))
             if c - 1 >= 0:  # Captures to the left
                 if self.board[r - 1][c - 1][0] == 'b':
                     moves.append(Move((r, c), (r - 1, c - 1), self.board))
@@ -81,10 +91,10 @@ class GameState():
                     moves.append(Move((r, c), (r - 1, c + 1), self.board))
 
         else:  # Black movement
-            if self.board[r + 1][c] == '-':
-                moves.append(Move((r, c), r + 1, c), self.board)
-                if r == 1 and self.board[r + 2][c] == '-':
-                    moves.append(Move((r, c), (r + 1, c + 1), self.board))
+            if self.board[r + 1][c] == '--':
+                moves.append(Move((r, c), (r + 1, c), self.board))
+                if r == 1 and self.board[r + 2][c] == '--':
+                    moves.append(Move((r, c), (r + 2, c), self.board))
             if c - 1 >= 0:  # Captures to the left
                 if self.board[r + 1][c - 1][0] == 'w':
                     moves.append(Move((r, c), (r + 1, c - 1), self.board))
@@ -101,10 +111,10 @@ class GameState():
                 end_col = c + d[1] * i
                 if 0 <= end_row < 8 and 0 <= end_col < 8:
                     end_piece = self.board[end_row][end_col]
-                    if end_piece == '-':
-                        moves.append(Move(r, c), (end_row, end_col), self.board)
+                    if end_piece == '--':
+                        moves.append(Move((r, c), (end_row, end_col), self.board))
                     elif end_piece[0] == enemy_color:
-                        moves.append(Move(r, c)(end_row, end_col), self.board)
+                        moves.append(Move((r, c), (end_row, end_col), self.board))
                         break
                     else:
                         break
@@ -120,10 +130,10 @@ class GameState():
                 end_col = c + d[1] * i
                 if 0 <= end_row < 8 and 0 <= end_col < 8:
                     end_piece = self.board[end_row][end_col]
-                    if end_piece == '-':
-                        moves.append(Move(r, c), (end_row, end_col), self.board)
+                    if end_piece == '--':
+                        moves.append(Move((r, c), (end_row, end_col), self.board))
                     elif end_piece[0] == enemy_color:
-                        moves.append(Move(r, c)(end_row, end_col), self.board)
+                        moves.append(Move((r, c), (end_row, end_col), self.board))
                         break
                     else:
                         break
@@ -138,10 +148,10 @@ class GameState():
             end_col = c + d[1]
             if 0 <= end_row < 8 and 0 <= end_col < 8:
                 end_piece = self.board[end_row][end_col]
-                if end_piece == '-':
-                    moves.append(Move(r, c), (end_row, end_col), self.board)
+                if end_piece == '--':
+                    moves.append(Move((r, c), (end_row, end_col), self.board))
                 elif end_piece[0] == enemy_color:
-                    moves.append(Move(r, c)(end_row, end_col), self.board)
+                    moves.append(Move((r, c), (end_row, end_col), self.board))
             else:
                 break
 
@@ -154,10 +164,10 @@ class GameState():
                 end_col = c + d[1] * i
                 if 0 <= end_row < 8 and 0 <= end_col < 8:
                     end_piece = self.board[end_row][end_col]
-                    if end_piece == '-':
-                        moves.append(Move(r, c), (end_row, end_col), self.board)
+                    if end_piece == '--':
+                        moves.append(Move((r, c), (end_row, end_col), self.board))
                     elif end_piece[0] == enemy_color:
-                        moves.append(Move(r, c)(end_row, end_col), self.board)
+                        moves.append(Move((r, c), (end_row, end_col), self.board))
                         break
                     else:
                         break
@@ -172,13 +182,9 @@ class GameState():
             end_col = c + d[1]
             if 0 <= end_row < 8 and 0 <= end_col < 8:
                 end_piece = self.board[end_row][end_col]
-                if end_piece == '-':
-                    moves.append(Move(r, c), (end_row, end_col), self.board)
+                if end_piece == '--':
+                    moves.append(Move((r, c), (end_row, end_col), self.board))
                 elif end_piece[0] == enemy_color:
-                    moves.append(Move(r, c)(end_row, end_col), self.board)
+                    moves.append(Move((r, c)(end_row, end_col), self.board))
             else:
                 break
-
-    def print_board(self):
-        for sub in self.board:
-            print(sub)
