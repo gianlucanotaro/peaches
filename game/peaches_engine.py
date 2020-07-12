@@ -7,13 +7,13 @@ class Move:
     def __init__(self, startSq, endSq, board):
         self.startRow = startSq[0]
         self.startCol = startSq[1]
-        self.endRow = endSq[0]
-        self.endCol = endSq[1]
+        self.end_row = endSq[0]
+        self.end_col = endSq[1]
         self.pieceMoved = board[self.startRow][self.startCol]
-        self.pieceCaptured = board[self.endRow][self.endCol]
+        self.pieceCaptured = board[self.end_row][self.end_col]
 
     def get_chess_notation(self):
-        return self.get_rank_file(self.startRow, self.startCol) + self.get_rank_file(self.endRow, self.endCol)
+        return self.get_rank_file(self.startRow, self.startCol) + self.get_rank_file(self.end_row, self.end_col)
 
     def get_rank_file(self, r: int, c: int):
         return self.colsToFiles[c] + self.rowsToRanks[r]
@@ -24,10 +24,10 @@ class GameState():
         self.board = [
             ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
             ["bp" for i in range(8)],
-            ["-" for i in range(8)],
-            ["-" for i in range(8)],
-            ["-" for i in range(8)],
-            ["-" for i in range(8)],
+            ["--" for i in range(8)],
+            ["--" for i in range(8)],
+            ["--" for i in range(8)],
+            ["--" for i in range(8)],
             ["wp" for i in range(8)],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
@@ -43,7 +43,7 @@ class GameState():
 
     def make_move(self, move: Move):
         self.board[move.startRow][move.startCol] = "-"
-        self.board[move.endRow][move.endCol] = move.pieceMoved
+        self.board[move.end_row][move.end_col] = move.pieceMoved
         self.move_log.append(move)
         self.turnPlayer = not self.turnPlayer
 
@@ -51,7 +51,7 @@ class GameState():
         if len(self.move_log) != 0:
             move = self.move_log.pop()
             self.board[move.startRow][move.startCol] = move.pieceMoved
-            self.board[move.endRow][move.endCol] = move.pieceCaptured
+            self.board[move.end_row][move.end_col] = move.pieceCaptured
             self.turnPlayer = not self.turnPlayer
 
     def get_valid_moves(self):
@@ -94,17 +94,17 @@ class GameState():
 
     def get_rook_moves(self, r: int, c: int, moves: [Move]):
         directions = ((1, 0), (0, 1), (-1, 0), (0, -1))
-        enemyColor = "b" if self.turnPlayer else "w"
+        enemy_color = "b" if self.turnPlayer else "w"
         for d in directions:
             for i in range(1, 8):
-                endRow = r + d(0) * i
-                endCol = c + d(0) * i
-                if 0 <= endRow < 8 and 0 <= endCol < 8:
-                    endPiece = self.board[endRow][endCol]
-                    if endPiece == '-':
-                        moves.append(Move(r, c), (endRow, endCol), self.board)
-                    elif endPiece[0] == enemyColor:
-                        moves.append(Move(r, c)(endRow, endCol), self.board)
+                end_row = r + d[0] * i
+                end_col = c + d[1] * i
+                if 0 <= end_row < 8 and 0 <= end_col < 8:
+                    end_piece = self.board[end_row][end_col]
+                    if end_piece == '-':
+                        moves.append(Move(r, c), (end_row, end_col), self.board)
+                    elif end_piece[0] == enemy_color:
+                        moves.append(Move(r, c)(end_row, end_col), self.board)
                         break
                     else:
                         break
@@ -113,17 +113,17 @@ class GameState():
 
     def get_bishop_moves(self, r: int, c: int, moves: [Move]):
         directions = ((1, 1), (1, -1), (-1, 1), (-1, -1))
-        enemyColor = "b" if self.turnPlayer else "w"
+        enemy_color = "b" if self.turnPlayer else "w"
         for d in directions:
             for i in range(1, 8):
-                endRow = r + d(0) * i
-                endCol = c + d(0) * i
-                if 0 <= endRow < 8 and 0 <= endCol < 8:
-                    endPiece = self.board[endRow][endCol]
-                    if endPiece == '-':
-                        moves.append(Move(r, c), (endRow, endCol), self.board)
-                    elif endPiece[0] == enemyColor:
-                        moves.append(Move(r, c)(endRow, endCol), self.board)
+                end_row = r + d[0] * i
+                end_col = c + d[1] * i
+                if 0 <= end_row < 8 and 0 <= end_col < 8:
+                    end_piece = self.board[end_row][end_col]
+                    if end_piece == '-':
+                        moves.append(Move(r, c), (end_row, end_col), self.board)
+                    elif end_piece[0] == enemy_color:
+                        moves.append(Move(r, c)(end_row, end_col), self.board)
                         break
                     else:
                         break
@@ -132,36 +132,32 @@ class GameState():
 
     def get_knight_moves(self, r: int, c: int, moves: [Move]):
         directions = ((2, 1), (2, -1), (1, -2), (-1, -2), (-2, 1), (-2, -1), (1, 2), (-1, 2))
-        enemyColor = "b" if self.turnPlayer else "w"
+        enemy_color = "b" if self.turnPlayer else "w"
         for d in directions:
-            for i in range(1, 8):
-                endRow = r + d(0) * i
-                endCol = c + d(0) * i
-                if 0 <= endRow < 8 and 0 <= endCol < 8:
-                    endPiece = self.board[endRow][endCol]
-                    if endPiece == '-':
-                        moves.append(Move(r, c), (endRow, endCol), self.board)
-                    elif endPiece[0] == enemyColor:
-                        moves.append(Move(r, c)(endRow, endCol), self.board)
-                        break
-                    else:
-                        break
-                else:
-                    break
+            end_row = r + d[0]
+            end_col = c + d[1]
+            if 0 <= end_row < 8 and 0 <= end_col < 8:
+                end_piece = self.board[end_row][end_col]
+                if end_piece == '-':
+                    moves.append(Move(r, c), (end_row, end_col), self.board)
+                elif end_piece[0] == enemy_color:
+                    moves.append(Move(r, c)(end_row, end_col), self.board)
+            else:
+                break
 
     def get_king_moves(self, r: int, c: int, moves: [Move]):
         directions = ((1, 1), (1, -1), (-1, 1), (-1, -1), (1, 0), (0, 1), (-1, 0), (0, -1))
-        enemyColor = "b" if self.turnPlayer else "w"
+        enemy_color = "b" if self.turnPlayer else "w"
         for d in directions:
             for i in range(1, 8):
-                endRow = r + d(0) * i
-                endCol = c + d(0) * i
-                if 0 <= endRow < 8 and 0 <= endCol < 8:
-                    endPiece = self.board[endRow][endCol]
-                    if endPiece == '-':
-                        moves.append(Move(r, c), (endRow, endCol), self.board)
-                    elif endPiece[0] == enemyColor:
-                        moves.append(Move(r, c)(endRow, endCol), self.board)
+                end_row = r + d[0] * i
+                end_col = c + d[1] * i
+                if 0 <= end_row < 8 and 0 <= end_col < 8:
+                    end_piece = self.board[end_row][end_col]
+                    if end_piece == '-':
+                        moves.append(Move(r, c), (end_row, end_col), self.board)
+                    elif end_piece[0] == enemy_color:
+                        moves.append(Move(r, c)(end_row, end_col), self.board)
                         break
                     else:
                         break
@@ -170,7 +166,18 @@ class GameState():
 
     def get_queen_moves(self, r: int, c: int, moves: [Move]):
         directions = ((1, 1), (-1, 1), (-1, -1), (1, -1), (1, 0), (0, 1), (-1, 0), (0, -1))
-        pass
+        enemy_color = "b" if self.turnPlayer else "w"
+        for d in directions:
+            end_row = r + d[0]
+            end_col = c + d[1]
+            if 0 <= end_row < 8 and 0 <= end_col < 8:
+                end_piece = self.board[end_row][end_col]
+                if end_piece == '-':
+                    moves.append(Move(r, c), (end_row, end_col), self.board)
+                elif end_piece[0] == enemy_color:
+                    moves.append(Move(r, c)(end_row, end_col), self.board)
+            else:
+                break
 
     def print_board(self):
         for sub in self.board:
