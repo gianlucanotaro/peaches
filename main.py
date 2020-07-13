@@ -1,7 +1,5 @@
 from tkinter import *
 
-from PIL import ImageTk, Image
-
 from game import peaches_engine
 from game.peaches_engine import Move
 
@@ -47,6 +45,12 @@ def on_drop(event):
         print("invalid")
 
 
+def undo(event):
+    print("undone move")
+    g.undo_move()
+    draw_board(g.board)
+
+
 if __name__ == "__main__":
     g = peaches_engine.GameState()
     root = Tk()
@@ -56,5 +60,6 @@ if __name__ == "__main__":
     refresh_pieces(g.board)
     canvas.bind("<ButtonPress-1>", on_start)
     canvas.bind("<ButtonRelease-1>", on_drop)
+    canvas.bind("<ButtonPress-2>", undo)
     canvas.pack()
     root.mainloop()
