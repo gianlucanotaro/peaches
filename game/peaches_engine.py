@@ -105,9 +105,10 @@ class GameState:
                         if not (moves[i].end_row, moves[i].end_col) in valid_squares:
                             moves.remove(moves[i])
             else:
-                self.get_king_moves(king_row,king_col,moves)
+                self.get_king_moves(king_row, king_col, moves)
         else:
             moves = self.get_possible_moves()
+
         return moves
 
     def get_possible_moves(self):
@@ -195,10 +196,8 @@ class GameState:
                     moves.append(Move((r, c), (end_row, end_col), self.board))
                 elif end_piece[0] == enemy_color:
                     moves.append(Move((r, c), (end_row, end_col), self.board))
-            else:
-                break
 
-    def get_king_moves(self, r: int, c: int, moves: [Move]):
+    def get_queen_moves(self, r: int, c: int, moves: [Move]):
         directions = ((1, 1), (1, -1), (-1, 1), (-1, -1), (1, 0), (0, 1), (-1, 0), (0, -1))
         enemy_color = "b" if self.turnPlayer else "w"
         for d in directions:
@@ -217,20 +216,18 @@ class GameState:
                 else:
                     break
 
-    def get_queen_moves(self, r: int, c: int, moves: [Move]):
+    def get_king_moves(self, r: int, c: int, moves: [Move]):
         directions = ((1, 1), (-1, 1), (-1, -1), (1, -1), (1, 0), (0, 1), (-1, 0), (0, -1))
         enemy_color = "b" if self.turnPlayer else "w"
-        for d in directions:
-            end_row = r + d[0]
-            end_col = c + d[1]
+        for i in range(8):
+            end_row = r + directions[i][0]
+            end_col = c + directions[i][1]
             if 0 <= end_row < 8 and 0 <= end_col < 8:
                 end_piece = self.board[end_row][end_col]
                 if end_piece == '--':
                     moves.append(Move((r, c), (end_row, end_col), self.board))
                 elif end_piece[0] == enemy_color:
                     moves.append(Move((r, c), (end_row, end_col), self.board))
-            else:
-                break
 
     def check_for_pins_and_checks(self):
         pins = []
@@ -274,8 +271,8 @@ class GameState:
                         else:
                             pins.append(possible_pin)
                             break
-                    else:
-                        break
+                else:
+                    break
         knight_moves = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
         for m in knight_moves:
             end_row = start_row + m[0]
