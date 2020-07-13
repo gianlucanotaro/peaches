@@ -1,5 +1,7 @@
 from tkinter import *
 
+from PIL import ImageTk, Image
+
 from game import peaches_engine
 from game.peaches_engine import Move
 
@@ -7,8 +9,8 @@ WIDTH = HEIGHT = 800
 DIMENSION = 8
 SQ_SIZE = HEIGHT / DIMENSION
 
-xstart = 0
-ystart = 0
+x_start = 0
+y_start = 0
 
 
 def draw_board(board):
@@ -29,19 +31,18 @@ def refresh_pieces(board):
 
 
 def on_start(event):
-    global xstart
-    global ystart
-    xstart = event.x // 100
-    ystart = event.y // 100
+    global x_start
+    global y_start
+    x_start = event.x // 100
+    y_start = event.y // 100
 
 
 def on_drop(event):
-    moves = g.get_possible_moves()
-    move = Move((ystart, xstart), (event.y // 100, event.x // 100), g.board)
+    moves = g.get_valid_moves()
+    move = Move((y_start, x_start), (event.y // 100, event.x // 100), g.board)
     if move in moves:
         g.make_move(move)
         draw_board(g.board)
-        print(g.move_log)
     else:
         print("invalid")
 
@@ -49,8 +50,8 @@ def on_drop(event):
 if __name__ == "__main__":
     g = peaches_engine.GameState()
     root = Tk()
-    root.resizable(False, False)
     canvas = Canvas(root, width=WIDTH, height=HEIGHT)
+    root.resizable(False, False)
     draw_board(g.board)
     refresh_pieces(g.board)
     canvas.bind("<ButtonPress-1>", on_start)
