@@ -2,6 +2,8 @@ from tkinter import *
 
 from game import peaches_engine
 from game.peaches_engine import Move
+from PIL import Image, ImageTk
+
 
 WIDTH = HEIGHT = 800
 DIMENSION = 8
@@ -51,15 +53,20 @@ def undo(event):
     draw_board(g.board)
 
 
-if __name__ == "__main__":
-    g = peaches_engine.GameState()
-    root = Tk()
-    canvas = Canvas(root, width=WIDTH, height=HEIGHT)
-    root.resizable(False, False)
+def init():
     draw_board(g.board)
     refresh_pieces(g.board)
     canvas.bind("<ButtonPress-1>", on_start)
     canvas.bind("<ButtonRelease-1>", on_drop)
     canvas.bind("<ButtonPress-2>", undo)
     canvas.pack()
+    photo = ImageTk.PhotoImage(Image.open("img/bQ.gif"))
+    canvas.create_image(200,200,anchor=NW, image=photo)
     root.mainloop()
+
+if __name__ == "__main__":
+    g = peaches_engine.GameState()
+    root = Tk()
+    canvas = Canvas(root, width=WIDTH, height=HEIGHT)
+    root.resizable(False, False)
+    init()
