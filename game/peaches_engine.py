@@ -4,7 +4,7 @@ class Move:
     files_to_cols = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4, "f": 5, "g": 6, "h": 7}
     cols_to_files = {v: k for k, v in files_to_cols.items()}
 
-    def __init__(self, start_sequence, end_sequence, board):
+    def __init__(self, start_sequence, end_sequence, board, is_en_passant_move=False):
         self.start_row = start_sequence[0]
         self.start_col = start_sequence[1]
         self.end_row = end_sequence[0]
@@ -12,6 +12,12 @@ class Move:
         self.piece_moved = board[self.start_row][self.start_col]
         self.piece_captured = board[self.end_row][self.end_col]
         self.move_id = self.start_row * 1000 + self.start_col * 100 + self.end_row * 10 + self.end_col
+        self.is_pawn_promotion = False
+        self.is_en_passant_move = is_en_passant_move
+        self.is_pawn_promotion = ((self.piece_moved == 'wp' and self.end_row == 0) or (
+                self.piece_moved == 'bp' and self.end_row == 7))
+        if self.is_en_passant_move:
+            self.piece_captured = 'wp' if self.piece_moved == 'bp' else 'bp'
 
     def __str__(self):
         return str(self.cols_to_files[self.start_col]) + str(self.rows_to_ranks[self.start_row]) + \
@@ -53,16 +59,31 @@ class GameState:
         self.blackKingLoc = (0, 4)
         self.stale_mate = False
         self.check_mate = False
+        self.en_passant_possible = ()
 
     def make_move(self, move: Move):
-        self.board[move.end_row][move.end_col] = move.piece_moved
         self.board[move.start_row][move.start_col] = "--"
+        self.board[move.end_row][move.end_col] = move.piece_moved
         self.move_log.append(move)
         self.turnPlayer = not self.turnPlayer
         if move.piece_moved == 'wK':
             self.whiteKingLoc = (move.end_row, move.end_col)
         if move.piece_moved == 'bK':
             self.blackKingLoc = (move.end_row, move.end_col)
+
+        if move.is_pawn_promotion:
+            a = ['B', 'Q', 'R', 'N']
+            i = input()
+            if i in a:
+                self.board[move.end_row][move.end_col] = move.piece_moved[0] + i
+
+        if move.is_en_passant_move:
+            self.board[move.start_row][move.start_col] = '--'
+
+        if move.piece_moved[1] == 'p' and abs(move.start_row - move.end_row) == 2:
+            self.en_passant_possible = ((move.start_row + move.end_row) // 2, move.start_col)
+        else:
+            self.en_passant_possible = ()
 
     def undo_move(self):
         if len(self.move_log) != 0:
@@ -74,8 +95,15 @@ class GameState:
                 self.whiteKingLoc = (move.start_row, move.start_col)
             if move.piece_moved == 'bK':
                 self.blackKingLoc = (move.end_row, move.end_col)
+            if move.is_en_passant_move:
+                self.board[move.end_row][move.end_col] = '--'
+                self.board[move.start_row][move.end_col] = move.piece_captured
+                self.en_passant_possible = (move.end_row, move.end_col)
+            if move.piece_moved[1] == 'p' and abs(move.start_row - move.end_row) == 2:
+                self.en_passant_possible = ()
 
     def get_valid_moves(self):
+        temp_en_passant_possible = self.en_passant_possible
         moves = self.get_possible_moves()
         for i in range(len(moves) - 1, -1, -1):
             self.make_move(moves[i])
@@ -91,11 +119,8 @@ class GameState:
                 else:
                     self.stale_mate = True
                     print("stalemate")
-            else:
-                self.check_mate = False
-                self.stale_mate = False
+        self.en_passant_possible = temp_en_passant_possible
         return moves
-
 
     def in_check(self):
         if self.turnPlayer:
@@ -132,10 +157,14 @@ class GameState:
             if c - 1 >= 0:  # Captures to the left
                 if self.board[r - 1][c - 1][0] == 'b':
                     moves.append(Move((r, c), (r - 1, c - 1), self.board))
+                elif (r - 1, c - 1) == self.en_passant_possible:
+                    moves.append(Move((r, c), (r - 1, c - 1), self.board, is_en_passant_move=True))
 
             if c + 1 <= 7:  # Captures to the right
                 if self.board[r - 1][c + 1][0] == 'b':
                     moves.append(Move((r, c), (r - 1, c + 1), self.board))
+                elif (r - 1, c + 1) == self.en_passant_possible:
+                    moves.append(Move((r, c), (r - 1, c + 1), self.board, is_en_passant_move=True))
 
         else:  # Black movement
             if self.board[r + 1][c] == '--':
@@ -145,9 +174,13 @@ class GameState:
             if c - 1 >= 0:  # Captures to the left
                 if self.board[r + 1][c - 1][0] == 'w':
                     moves.append(Move((r, c), (r + 1, c - 1), self.board))
+            elif (r + 1, c - 1) == self.en_passant_possible:
+                moves.append(Move((r, c), (r + 1, c - 1), self.board, is_en_passant_move=True))
             if c + 1 <= 7:  # Captures to the right
                 if self.board[r - 1][c + 1][0] == 'w':
                     moves.append(Move((r, c), (r + 1, c + 1), self.board))
+            elif (r + 1, c + 1) == self.en_passant_possible:
+                moves.append(Move((r, c), (r + 1, c + 1), self.board, is_en_passant_move=True))
 
     def get_rook_moves(self, r: int, c: int, moves: [Move]):
         directions = ((1, 0), (0, 1), (-1, 0), (0, -1))
